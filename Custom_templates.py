@@ -29,7 +29,7 @@ singleTask = {
 taskInfo = []
 customSaveTaskInfo = []
 
-driver.get("https://worklenz.com/authenticate")
+driver.get("https://uat.app.worklenz.com/auth/login")
 driver.maximize_window()
 
 
@@ -40,15 +40,15 @@ def main():
 
 def login():
     wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Email']"))).send_keys(
-        "coyonic318@hupoi.com")
+        "testauto@1.com")
     wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Password']"))).send_keys(
-        "Test@12345")
+        "ceyDigital#00")
     wait.until(EC.visibility_of_element_located((By.XPATH, "//span[normalize-space()='Log in']"))).click()
     time.sleep(5)
 
 
 def go_to_projects_tab():
-    driver.get("https://worklenz.com/worklenz/projects")
+    driver.get("https://uat.app.worklenz.com/worklenz/projects")
     time.sleep(10)
 
 
@@ -155,9 +155,12 @@ def save_custom_template():
 
 
 def go_to_saved_custom_template():
-    wl_header = driver.find_element(By.TAG_NAME, "worklenz-header")
-    left_header = wl_header.find_elements(By.TAG_NAME, "ul")[1]
-    profile_icon = left_header.find_elements(By.TAG_NAME, "li")[-1]
+    page_header = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "nz-page-header-extra")))
+    page_header_wait = WebDriverWait(page_header, 10)
+    profile_icon = page_header_wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "page_header_wait")))[1]
+    # wl_header = driver.find_element(By.TAG_NAME, "worklenz-header")
+    # left_header = wl_header.find_elements(By.TAG_NAME, "ul")[1]
+    # profile_icon = left_header.find_elements(By.TAG_NAME, "li")[-1]
     profile_icon.click()
     time.sleep(1)
     drop_down_menu = driver.find_element(By.CSS_SELECTOR,
@@ -247,7 +250,7 @@ def check_project_availability():
 
 
 main()
-expected_URL = "https://worklenz.com/worklenz/projects"
+expected_URL = "https://uat.app.worklenz.com/worklenz/projects"
 current_URL = driver.current_url
 if expected_URL == current_URL:
     print("Projects tab page is loaded")
