@@ -103,14 +103,10 @@ def get_tasks_data():
     tasksRow = task_list.find_elements(By.TAG_NAME, "worklenz-task-list-row")
     for taskRow in tasksRow:
         task_name = taskRow.find_element(By.CLASS_NAME, "task-name-text")
-        print(task_name.text)
         status_cell = taskRow.find_element(By.TAG_NAME, "worklenz-task-list-status")
         status = status_cell.find_element(By.TAG_NAME, "nz-select-item")
-        print(status.text)
         priority_cell = taskRow.find_element(By.TAG_NAME, "worklenz-task-list-priority")
         priority = priority_cell.find_element(By.TAG_NAME, "nz-select-item")
-        print(priority.text)
-        # need code for phase filed select
         phases_cell = taskRow.find_element(By.TAG_NAME, "worklenz-task-list-phase")
         try:
             phase = phases_cell.find_element(By.TAG_NAME, "nz-select-item")
@@ -119,10 +115,8 @@ def get_tasks_data():
         except NoSuchElementException:
             phase_text = ""
 
-        # need code for estimated filed select
         estimated_time_cell = taskRow.find_element(By.CLASS_NAME, "task-estimation")
         estimated_time = estimated_time_cell.find_element(By.CLASS_NAME, "task-due-label")
-        print(estimated_time.text)
 
         singleTask["name"] = task_name.text
         singleTask["status"] = status.text
@@ -155,12 +149,13 @@ def save_custom_template():
 
 
 def go_to_saved_custom_template():
-    page_header = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "nz-page-header-extra")))
-    page_header_wait = WebDriverWait(page_header, 10)
-    profile_icon = page_header_wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "page_header_wait")))[1]
-    # wl_header = driver.find_element(By.TAG_NAME, "worklenz-header")
-    # left_header = wl_header.find_elements(By.TAG_NAME, "ul")[1]
-    # profile_icon = left_header.find_elements(By.TAG_NAME, "li")[-1]
+    # page_header = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "nz-page-header-extra")))
+    # page_header_wait = WebDriverWait(page_header, 10)
+    # profile_icon = page_header_wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "page_header_wait")))[1]
+    wl_header = driver.find_element(By.TAG_NAME, "worklenz-header")
+    left_header = wl_header.find_elements(By.TAG_NAME, "ul")
+    print(len(left_header))
+    profile_icon = left_header.find_elements(By.TAG_NAME, "li")[-1]
     profile_icon.click()
     time.sleep(1)
     drop_down_menu = driver.find_element(By.CSS_SELECTOR,
