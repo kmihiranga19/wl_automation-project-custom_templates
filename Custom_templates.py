@@ -44,24 +44,21 @@ def login():
     wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Password']"))).send_keys(
         "ceyDigital#00")
     wait.until(EC.visibility_of_element_located((By.XPATH, "//span[normalize-space()='Log in']"))).click()
-    time.sleep(5)
 
 
 def go_to_projects_tab():
     driver.get("https://uat.app.worklenz.com/worklenz/projects")
-    time.sleep(10)
 
 
 def check_need_tasksList_fields_visible():
-    show_fields = driver.find_element(By.TAG_NAME, "worklenz-task-list-columns-toggle")
-    show_fields_btn = show_fields.find_element(By.TAG_NAME, "button")
-    time.sleep(2)
-    show_fields_btn.click()
-    time.sleep(3)
-    drop_down_menu = driver.find_element(By.CLASS_NAME,
-                                         "cdk-overlay-connected-position-bounding-box")
-    drop_main = drop_down_menu.find_elements(By.TAG_NAME, "div")[1]
-    items = drop_main.find_elements(By.TAG_NAME, "li")
+    show_fields = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "worklenz-task-list-columns-toggle")))
+    show_fields_wait = WebDriverWait(show_fields, 10)
+    show_fields_wait.until(EC.visibility_of_element_located((By.TAG_NAME, "button"))).click()
+    drop_down_menu = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "cdk-overlay-connected-position-bounding-box")))
+    drop_down_menu_wait = WebDriverWait(drop_down_menu, 10)
+    drop_main = drop_down_menu_wait.until(EC.visibility_of_all_elements_located((By.TAG_NAME, "div")))[1]
+    drop_main_wait = WebDriverWait(drop_main, 10)
+    items = drop_main_wait.until(EC.visibility_of_all_elements_located((By.TAG_NAME, "li")))
     phase_field = items[-1].get_attribute("class")
     time_estimated_field = items[8].get_attribute("class")
     included_class_name = r'\bant-checkbox-wrapper-checked\b'
@@ -80,8 +77,7 @@ def check_need_tasksList_fields_visible():
     else:
         items[8].click()
 
-    temporary_click = driver.find_element(By.XPATH, "//label[normalize-space()='Group by:']")
-    temporary_click.click()
+    driver.find_element(By.XPATH, "//label[normalize-space()='Group by:']").click()
     time.sleep(2)
 
 
@@ -149,12 +145,8 @@ def save_custom_template():
 
 
 def go_to_saved_custom_template():
-    # page_header = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "nz-page-header-extra")))
-    # page_header_wait = WebDriverWait(page_header, 10)
-    # profile_icon = page_header_wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "page_header_wait")))[1]
     wl_header = driver.find_element(By.TAG_NAME, "worklenz-header")
-    left_header = wl_header.find_elements(By.TAG_NAME, "ul")
-    print(len(left_header))
+    left_header = wl_header.find_elements(By.TAG_NAME, "ul")[2]
     profile_icon = left_header.find_elements(By.TAG_NAME, "li")[-1]
     profile_icon.click()
     time.sleep(1)
