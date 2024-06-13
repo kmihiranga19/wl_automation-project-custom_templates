@@ -13,7 +13,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
-# options.add_argument("--disable-notifications")
+prefs = {"profile.default_content_setting_values.notifications": 2}
+options.add_experimental_option("prefs", prefs)
 driver = webdriver.Chrome(options=options)
 driver.implicitly_wait(5)
 wait = WebDriverWait(driver, 5)
@@ -44,17 +45,20 @@ def login():
     wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Password']"))).send_keys(
         "ceyDigital#00")
     wait.until(EC.visibility_of_element_located((By.XPATH, "//span[normalize-space()='Log in']"))).click()
+    time.sleep(2)
 
 
 def go_to_projects_tab():
     driver.get("https://uat.app.worklenz.com/worklenz/projects")
+    time.sleep(1)
 
 
 def check_need_tasksList_fields_visible():
     show_fields = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "worklenz-task-list-columns-toggle")))
     show_fields_wait = WebDriverWait(show_fields, 10)
     show_fields_wait.until(EC.visibility_of_element_located((By.TAG_NAME, "button"))).click()
-    drop_down_menu = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "cdk-overlay-connected-position-bounding-box")))
+    drop_down_menu = wait.until(
+        EC.visibility_of_element_located((By.CLASS_NAME, "cdk-overlay-connected-position-bounding-box")))
     drop_down_menu_wait = WebDriverWait(drop_down_menu, 10)
     drop_main = drop_down_menu_wait.until(EC.visibility_of_all_elements_located((By.TAG_NAME, "div")))[1]
     drop_main_wait = WebDriverWait(drop_main, 10)
@@ -78,7 +82,6 @@ def check_need_tasksList_fields_visible():
         items[8].click()
 
     driver.find_element(By.XPATH, "//label[normalize-space()='Group by:']").click()
-    time.sleep(2)
 
 
 def create_project_tasks():
@@ -202,10 +205,8 @@ def get_saved_custom_project_data():
 
         statues_cell = task_row.find_element(By.TAG_NAME, "worklenz-task-status")
         statues = statues_cell.find_element(By.TAG_NAME, "nz-select-item")
-        print(statues.text)
         priority_cell = task_row.find_element(By.TAG_NAME, "worklenz-task-priority")
         priority = priority_cell.find_element(By.TAG_NAME, "nz-select-item")
-        print(priority.text)
         time_estimated_cell = task_row.find_element(By.TAG_NAME, "worklenz-task-estimation")
         time_estimated = time_estimated_cell.find_element(By.TAG_NAME, "p")
 
@@ -255,5 +256,3 @@ if expected_URL == current_URL:
     time.sleep(10)
 else:
     print("Projects tab page not loaded")
-
-driver.quit()
