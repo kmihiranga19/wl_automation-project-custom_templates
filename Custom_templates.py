@@ -139,6 +139,7 @@ def save_custom_template():
     temp_name = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Enter template name"]')
     temp_name.send_keys(random_tem_name)
     entered_value = temp_name.get_attribute("value")
+    entered_value.strip()
     time.sleep(1)
     save_btn = driver.find_element(By.CSS_SELECTOR,
                                    "div[class='ant-drawer ant-drawer-right ng-star-inserted ant-drawer-open'] button[class='ant-btn ant-btn-primary'] span[class='ng-star-inserted']")
@@ -169,7 +170,7 @@ def edit_saved_custom_template(temp_name: str):
     row_index = -1
     for index, table_row in enumerate(table_rows):
         saved_tem_name = table_row.find_elements(By.CLASS_NAME, "ant-table-cell")[0]
-        if temp_name == saved_tem_name.text:
+        if temp_name == saved_tem_name.text.strip():
             row_index = index
             break
     if row_index > -1:
@@ -186,7 +187,7 @@ def edit_saved_custom_template(temp_name: str):
             edit_saved_custom_template(temp_name)
         else:
             print("not found")
-            return
+    return
 
 
 def get_saved_custom_project_data():
@@ -194,7 +195,6 @@ def get_saved_custom_project_data():
     tasks_rows = table.find_elements(By.TAG_NAME, "worklenz-pt-task-list-row")
     for task_row in tasks_rows:
         task_name = task_row.find_element(By.CLASS_NAME, "task-name-text")
-        print(task_name.text)
         phase_cell = task_row.find_element(By.TAG_NAME, "worklenz-task-phase")
         try:
             phase = phase_cell.find_element(By.TAG_NAME, "nz-select-item")
